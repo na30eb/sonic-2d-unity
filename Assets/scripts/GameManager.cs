@@ -14,6 +14,13 @@ public class GameManager : MonoBehaviour
   public TextMeshProUGUI gameOverText;
   public Button retryButton;
 
+  //show
+  public TextMeshProUGUI scoreText;
+  public TextMeshProUGUI hiScoreText;
+  //calculation
+  private float score;
+
+
   public float gameSpeed {get; private set;}
 
   private player player;
@@ -57,6 +64,8 @@ public class GameManager : MonoBehaviour
     gameOverText.gameObject.SetActive(false);
     retryButton.gameObject.SetActive(false);
 
+    score=0;
+
   }
 
   public void GameOver() {
@@ -68,12 +77,26 @@ public class GameManager : MonoBehaviour
 
       gameOverText.gameObject.SetActive(true);
     retryButton.gameObject.SetActive(true);
+    UpdateHiScore();
   }
   private void Update() {
 
     //gameSpeed += gameSpeedIncrease * Time.deltaTime;
+    score += gameSpeed * Time.deltaTime;
+    scoreText.text=Mathf.FloorToInt(score).ToString();
 
   }
+  private void UpdateHiScore() {
+    float hiscore = PlayerPrefs.GetFloat("hiscore" , 0);
+
+    if (score > hiscore) {
+      hiscore = score;
+      PlayerPrefs.SetFloat("hiscore" , hiscore);
+    }
+
+    hiScoreText.text = Mathf.FloorToInt(hiscore).ToString();
+  }
+
     public void speedplus() {
 
     gameSpeed += gameSpeedIncrease * 10 ;
